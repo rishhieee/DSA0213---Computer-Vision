@@ -11,4 +11,3 @@ sharp = cv2.add(img, gradient)
 cv2.imshow("Gradient Sharpening", sharp)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-```
