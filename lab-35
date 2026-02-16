@@ -1,0 +1,29 @@
+import cv2
+import numpy as np
+
+img = np.zeros((500, 500, 3), dtype=np.uint8)
+
+cv2.rectangle(img, (60, 80), (220, 320), (255, 255, 255), -1)
+cv2.rectangle(img, (280, 150), (450, 420), (255, 255, 255), -1)
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+_, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+extracted_objects = []
+
+for cnt in contours:
+    if cv2.contourArea(cnt) > 1000:
+        x, y, w, h = cv2.boundingRect(cnt)
+        extracted = img[y:y+h, x:x+w]
+        extracted_objects.append(extracted)
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+cv2.imshow("Rectangles with Bounding Boxes", img)
+
+for i, obj in enumerate(extracted_objects):
+    cv2.imshow(f"Extracted_Object_{i+1}", obj)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
